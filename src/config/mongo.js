@@ -1,13 +1,12 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-async function connectionMongoDB() {
-    try {
-        await mongoose.connect('mongodb://localhost:27019/fullstack')
-        console.log("MongoDB Conectado");
-        console.log(mongoose.connection.client.s.url);
-    } catch (error) {
-        console.error(error);
-    }
-}
+const connectMongo = async () => {
+  try {
+    await mongoose.connect('mongodb://localhost:27017/app_prestadores');
+    console.log('MongoDB conectado com sucesso!');
+  } catch (error) {
+    console.error('Erro ao conectar no MongoDB:', error);
+  }
+};
 
-module.exports = connectionMongoDB;
+module.exports = connectMongo;

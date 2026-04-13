@@ -1,13 +1,9 @@
-const mysql = require("mysql2/promise");
+const { Sequelize } = require('sequelize');
 
-const pool = mysql.createPool({
-    host: 'localhost',
-    port: 3307,
-    user: 'root',
-    password: 'root',
-    database: 'loja_de_carros'
+const sequelize = new Sequelize('app_clientes', 'root', 'rootpassword', {
+  host: 'localhost',
+  dialect: 'mysql',
+  logging: false,
 });
 
-module.exports = pool; //Mysql não precisa de conect explícito
-
-// npm install mysql2
+module.exports = sequelize;

@@ -1,19 +1,22 @@
 const express = require('express');
-const userRoutes = require('./routes/index');
-const carRoutes = require('./routes/carRoutes');
 const logger = require('./middlewares/logger');
+const prestadorRoutes = require('./routes/prestadorRoutes');
+const clienteRoutes = require('./routes/clienteRoutes');
 
 const app = express();
 
-//Middleware que Intercepta o JSON
+// Middlewares globais
 app.use(express.json());
+app.use(logger); // Aplicamos o nosso novo logger globalmente
 
-//Middleware Global
-app.use(logger);
+// Registo de Rotas
+app.use('/prestadores', prestadorRoutes);
+app.use('/clientes', clienteRoutes);
 
-//Rotas
-app.use(userRoutes);
-
-app.use(carRoutes);
+// Middleware global de tratamento de erros não capturados (Safety net)
+app.use((err, req, res, next) => {
+  console.error("Erro interno:", err.stack);
+  res.status(500).json({ erro: 'Ocorreu um erro interno no servidor.' });
+});
 
 module.exports = app;

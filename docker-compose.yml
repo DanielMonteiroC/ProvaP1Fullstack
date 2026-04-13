@@ -1,35 +1,27 @@
-version: '3.8' # É uma boa prática declarar a versão do compose
+version: '3.8'
 
 services:
-  mongodb:
-    image: mongo:7
-    container_name: mongo_fullstack
-    ports:
-    - "27019:27017"
-    networks:              # <-- CONEXÃO COM A REDE ADICIONADA
-      - fullstack_network 
-    volumes:
-      - mongo_data:/data/db
-
-  mysql:
-    image: mysql:8
-    container_name: mysql_fullstack
+  mysql-db:
+    image: mysql:8.0
+    container_name: app_mysql
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: loja_de_carros
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: app_clientes
     ports:
-      - "3307:3306"
-    networks:              # <-- CONEXÃO COM A REDE ADICIONADA
-      - fullstack_network
+      - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
 
-# <-- CONFIGURAÇÃO DA REDE PERSONALIZADA ABAIXO -->
-networks:                  
-  fullstack_network:       
-    driver: bridge         
+  mongo-db:
+    image: mongo:6.0
+    container_name: app_mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
 
 volumes:
-  mongo_data:
   mysql_data:
+  mongo_data:
