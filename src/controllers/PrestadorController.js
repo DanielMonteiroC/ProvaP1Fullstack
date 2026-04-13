@@ -66,6 +66,12 @@ exports.adicionarFoto = async (req, res) => {
       return res.status(400).json({ erro: 'ID inválido' });
     }
     const { fotoUrl } = req.body;
+    
+    // Validação de segurança adicionada
+    if (!fotoUrl) {
+      return res.status(400).json({ erro: 'O campo fotoUrl é obrigatório.' });
+    }
+
     const atualizado = await PrestadorService.adicionarFotoPortfolio(req.params.id, fotoUrl);
     res.status(200).json(atualizado);
   } catch (error) {
@@ -80,12 +86,17 @@ exports.removerFoto = async (req, res) => {
     }
 
     const { fotoUrl } = req.body;
+    
+    // Validação de segurança adicionada
+    if (!fotoUrl) {
+      return res.status(400).json({ erro: 'O campo fotoUrl é obrigatório.' });
+    }
+
     const prestador = await Prestador.findById(req.params.id);
     
-    // Proteção contra TypeError se o prestador não existir no banco
     if (!prestador) return res.status(404).json({ erro: 'Prestador não encontrado' });
     
-    // Filtra a foto exata que o usuário quer excluir do array
+    // Filtra a foto exata que o utilizador quer excluir do array
     prestador.fotos_portfolio = prestador.fotos_portfolio.filter(foto => foto !== fotoUrl);
     await prestador.save();
     
