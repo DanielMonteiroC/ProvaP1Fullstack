@@ -2,22 +2,18 @@ const express = require('express');
 const router = express.Router();
 
 const userController = require("../controllers/userController");
-const validateUser = require('../middlewares/validateuser');
+// O validateUser antigo pode ser adaptado, mas por enquanto vamos direto pro controller.
 
-//GET Listar Todos
+// GET - Listar Todos
 router.get('/users', userController.listUsers);
 
-//GET Listar usuários por ID (req.params)
-router.get('/users/:id', userController.getUser);
+// POST - Criação de um usuário (Salva em ambos os bancos)
+router.post('/users', userController.createUser);
 
-//POST - Criação de um usuário
-router.post('/users', validateUser, userController.createUser);
+// PUT - Atualizar Foto de Perfil (Máx 1)
+router.put('/users/:id/foto-perfil', userController.updateProfilePhoto);
 
-//PUT - Atualizar usuário
-router.put('/users/:id', userController.updateUser);
-
-//DELETE
-router.delete('/users/:id', userController.deleteUser);
-
+// POST - Adicionar Foto na Área de Fotos (Máx 5, apenas prestador)
+router.post('/users/:id/fotos-portfolio', userController.addPortfolioPhoto);
 
 module.exports = router;
