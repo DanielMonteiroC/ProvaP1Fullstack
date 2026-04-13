@@ -7,8 +7,7 @@ const { prestadorSchema } = require('../validations/prestadorValidation');
 // O middleware 'validate' age como um escudo antes de chegar ao 'criar'
 router.post('/', validate(prestadorSchema), PrestadorController.criar);
 
-// CRUD Básico
-router.post('/', PrestadorController.criar);
+// CRUD Básico (Rota POST duplicada foi removida)
 router.get('/', PrestadorController.listar);
 router.get('/:id', PrestadorController.buscarPorId);
 router.put('/:id', PrestadorController.atualizar);

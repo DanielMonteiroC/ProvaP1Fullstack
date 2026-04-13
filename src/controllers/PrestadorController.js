@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const PrestadorService = require('../services/PrestadorService');
 const Prestador = require('../models/Prestador');
 
@@ -21,6 +22,9 @@ exports.listar = async (req, res) => {
 
 exports.buscarPorId = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ erro: 'ID inválido' });
+    }
     const prestador = await Prestador.findById(req.params.id);
     if (!prestador) return res.status(404).json({ erro: 'Prestador não encontrado' });
     res.status(200).json(prestador);
@@ -31,6 +35,9 @@ exports.buscarPorId = async (req, res) => {
 
 exports.atualizar = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ erro: 'ID inválido' });
+    }
     const prestador = await Prestador.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
     if (!prestador) return res.status(404).json({ erro: 'Prestador não encontrado' });
     res.status(200).json(prestador);
@@ -41,6 +48,9 @@ exports.atualizar = async (req, res) => {
 
 exports.deletar = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ erro: 'ID inválido' });
+    }
     const prestador = await Prestador.findByIdAndDelete(req.params.id);
     if (!prestador) return res.status(404).json({ erro: 'Prestador não encontrado' });
     res.status(204).send();
@@ -52,6 +62,9 @@ exports.deletar = async (req, res) => {
 // Rotas específicas de negócio (Fotos Portfólio)
 exports.adicionarFoto = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ erro: 'ID inválido' });
+    }
     const { fotoUrl } = req.body;
     const atualizado = await PrestadorService.adicionarFotoPortfolio(req.params.id, fotoUrl);
     res.status(200).json(atualizado);
@@ -62,8 +75,15 @@ exports.adicionarFoto = async (req, res) => {
 
 exports.removerFoto = async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+      return res.status(400).json({ erro: 'ID inválido' });
+    }
+
     const { fotoUrl } = req.body;
     const prestador = await Prestador.findById(req.params.id);
+    
+    // Proteção contra TypeError se o prestador não existir no banco
+    if (!prestador) return res.status(404).json({ erro: 'Prestador não encontrado' });
     
     // Filtra a foto exata que o usuário quer excluir do array
     prestador.fotos_portfolio = prestador.fotos_portfolio.filter(foto => foto !== fotoUrl);
